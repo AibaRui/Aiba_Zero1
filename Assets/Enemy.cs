@@ -14,18 +14,25 @@ public class Enemy : MonoBehaviour
         
     }
 
-    // Update is called once per frame
 
-    public void OnTriggerEnter(Collider other)
+
+    public void OnTriggerEnter2D(Collider2D collision)
     {
-        if(other.gameObject.tag=="P_Attack")
+        
+    
+    
+        
+    
+        if(collision.gameObject.tag=="P_Attack")
         {
-
+            Debug.Log("aa");
+            Destroy(this.gameObject,0.1f);
 
         }
 
     }
 
+    
 
 
 
