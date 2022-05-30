@@ -34,28 +34,79 @@ public class P_Contorol : MonoBehaviour
     [SerializeField] Animator runEfect = null;
     [SerializeField] Animator attackEffect = null;
 
-   
-
-
+    [SerializeField] float _attackinterval = 1f;
+    float m_timer;
+    private bool isAttack;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-       
 
+        m_timer = _attackinterval;
     }
 
     // Update is called once per frame
     void Update()
      {
         float _h = Input.GetAxisRaw("Horizontal");
-        Move();
+
+
+         Attack();
+        if (isAttack==false)
+        {
+            JudgeJump();
+            Move();
+
+        }
+       
+
         FlipX(_h);
-        Attack();
+       
         JudgeBool();
 
 
+        
+
+       
+        
+    } 
+
+
+     void FixedUpdate()
+    {
+        Jump();
+
+
+         Vector2 dir = _crosshair.position - transform.position;
+        
+    }
+
+
+
+    void Attack()
+    {
+        m_timer += Time.deltaTime;
+        if (Input.GetButtonDown("Fire1")&&m_timer > _attackinterval)
+        {
+            m_timer = 0;
+            attackEffect.SetTrigger("Attack");
+            anim.SetTrigger("Attack 0");
+            isAttack = true;
+        }
+        else
+        {
+        isAttack = false;
+
+        }
+        
+
+
+    }
+
+
+    void JudgeJump()
+    {
         if (Input.GetButtonDown("Jump"))
         {
             
@@ -66,10 +117,8 @@ public class P_Contorol : MonoBehaviour
             }
         }
 
-    } 
-
-
-     void FixedUpdate()
+    }
+    void Jump()
     {
         if (jump)
         {
@@ -82,30 +131,12 @@ public class P_Contorol : MonoBehaviour
             jumpCount++;
            
         }
-     
-         Vector2 dir = _crosshair.position - transform.position;
-        
     }
 
 
 
-    void Attack()
-    {
-        //Vector3 tmp = GameObject.Find("CrossHair").transform.position;
 
 
-        //if (Input.GetButtonDown("Fire1"))
-        //{
-        //    rb.AddForce(aaa* _attackmove1, ForceMode2D.Impulse);
-        //}
-
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            attackEffect.SetTrigger("Attack");
-        }
-
-    }
 
 
     //ˆÚ“®
