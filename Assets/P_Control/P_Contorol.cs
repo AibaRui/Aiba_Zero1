@@ -5,38 +5,45 @@ using UnityEngine;
 public class P_Contorol : MonoBehaviour
 {
     //移動
-    public float _h ;   
+    public float _h;
     [SerializeField] float _speed;
     [SerializeField] float StartSpeed;
     [SerializeField] float MinasStartSpeed;
-   
-    
+
+
 
     //ジャンプ
     private bool OnGround;
     private bool jump;
-    [SerializeField]   float jumpPower= 10f;
-    [SerializeField] int jumpLimit=2;
-    public int jumpCount=0;
+    [SerializeField] float jumpPower = 10f;
+    [SerializeField] int jumpLimit = 2;
+
+    public int jumpCount = 0;
 
     float p_ScaleX;
 
-
+    //攻撃
     [SerializeField] float _attackmove1 = 5;
-    [SerializeField] Transform _crosshair;
+    [SerializeField] float _attackmove2 = 3;
+    [SerializeField] float _Yattackmove1 = 5;
+    [SerializeField] float _attackinterval = 1f;
+
+    [SerializeField] int _attackcount=0;
+
+    private bool isAttack;
+    private bool ppp = false;
     
-
-
-
-
-    Rigidbody2D rb;
-    private Animator anim = null;
     [SerializeField] Animator runEfect = null;
     [SerializeField] Animator attackEffect = null;
 
-    [SerializeField] float _attackinterval = 1f;
-    float m_timer;
-    private bool isAttack;
+   [SerializeField] float time = 0.2f;
+  float m_timer;
+
+
+
+
+     Rigidbody2D rb;
+    private Animator anim = null;
 
     void Start()
     {
@@ -48,56 +55,112 @@ public class P_Contorol : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-     {
+    {
         float _h = Input.GetAxisRaw("Horizontal");
 
 
-         Attack();
-        if (isAttack==false)
+        
+        Attack();
+        //攻撃時に他の動きができないように
+        if (isAttack == false)
         {
             JudgeJump();
             Move();
-
+            FlipX(_h);
         }
-       
 
-        FlipX(_h);
-       
+
+
+
         JudgeBool();
 
 
-        
-
-       
-        
-    } 
 
 
-     void FixedUpdate()
-    {
-        Jump();
 
 
-         Vector2 dir = _crosshair.position - transform.position;
-        
     }
 
+
+    void FixedUpdate()
+    {
+        Jump();
+        AttackMove();
+    }
+
+   
+    void JudgeAttack()
+    {
+        isAttack=false;　　 //Animationイベントで攻撃モーションが終わったら実行
+    }
+
+  
+    void AttackMove()
+    {
+        if (ppp == true)
+        {
+            //プレイヤーの位置
+            Vector2 _pPos = this.gameObject.transform.position;
+
+            //マウスの位置
+            Vector2 _mousPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            //ベクトル
+            Vector2 _attackMovePos = _mousPos - _pPos;
+
+            //飛ばす
+            if (_attackcount == 0)
+            {
+                if (rb.velocity.magnitude < 10)
+                {
+                    rb.AddForce(_attackMovePos * _attackmove1, ForceMode2D.Impulse);
+                    _attackcount++;
+                }
+            }
+            else if(_attackcount>0)
+            {
+                rb.AddForce(_attackMovePos * _attackmove2, ForceMode2D.Impulse);
+            }
+
+            //攻撃時の向き
+            float jjj = _mousPos.x - _pPos.x;
+            int a = 1;
+            if (jjj > 0)
+            {
+                a = 1;
+            }
+            else if (jjj < 0)
+            {
+                a = -1;
+            }
+            ppp = false;
+            
+            transform.localScale = new Vector3(a, this.transform.localScale.y, this.transform.localScale.z);
+        }
+    }
 
 
     void Attack()
     {
-        m_timer += Time.deltaTime;
-        if (Input.GetButtonDown("Fire1")&&m_timer > _attackinterval)
-        {
-            m_timer = 0;
-            attackEffect.SetTrigger("Attack");
-            anim.SetTrigger("Attack 0");
-            isAttack = true;
-        }
-        else
-        {
-        isAttack = false;
+        
+        
+        
 
+        m_timer += Time.deltaTime;
+        if (Input.GetButtonDown("Fire1"))
+            {
+                isAttack = true;
+            if (m_timer > _attackinterval)
+            {
+
+                ppp = true;
+                
+                m_timer = 0;
+                attackEffect.SetTrigger("Attack");
+                anim.SetTrigger("Attack 0");
+
+
+            }
         }
         
 
@@ -164,6 +227,13 @@ public class P_Contorol : MonoBehaviour
 
     void JudgeBool()
     {
+
+        if(rb.velocity.y!=0)
+        {
+            OnGround = false;
+            anim.SetBool("OnGround", false);
+        }
+
         if (rb.velocity.y == 0)
         {
             runEfect.SetBool("jump", false);
