@@ -146,8 +146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4fc63aa3e9067b4d8642343426b3a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3
-  _deleteTime: 5
+  _speed: 10
+  _deleteTime: 3
   _muzzle: {fileID: 0}
   player: {fileID: 0}
   _scale: 0
+  pos: {x: 0, y: 0}
