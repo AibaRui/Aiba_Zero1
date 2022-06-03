@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &30514271
 Rigidbody2D:
   serializedVersion: 4
@@ -468,12 +468,12 @@ Camera:
     x: 0
     y: 0
     width: 1
-    height: 1
+    height: 3
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -577,7 +577,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1099942901}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 5
+    OrthographicSize: 8
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -849,20 +849,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _h: 0
-  _speed: 7.21
+  _speed: 9
   StartSpeed: 0
   MinasStartSpeed: 0
-  jumpPower: 8
+  jumpPower: 10
   jumpLimit: 1
   jumpCount: 0
-  _attackmove1: 5
-  _attackmove2: 3
-  _Yattackmove1: 3
+  _attackmove1: 2
+  _attackmove2: 5
   _attackinterval: 0.4
+  limitSpeed1Y: 15
+  limitSpeed2Y: 7
+  limitSpeed1X: 10
+  limitSpeed2X: 5
   _attackcount: 0
   runEfect: {fileID: 1520827974}
   attackEffect: {fileID: 1186163554}
-  time: 0.2
+  time: 0.7
 --- !u!50 &1099942897
 Rigidbody2D:
   serializedVersion: 4
@@ -876,9 +879,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.05
+  m_LinearDrag: 0.77
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.5
   m_Material: {fileID: 6200000, guid: 149b85f3222c4ec4080c8ebec2cb2e8f, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1

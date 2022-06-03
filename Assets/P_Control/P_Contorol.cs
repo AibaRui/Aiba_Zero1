@@ -25,8 +25,12 @@ public class P_Contorol : MonoBehaviour
     //çUåÇ
     [SerializeField] float _attackmove1 = 5;
     [SerializeField] float _attackmove2 = 3;
-    [SerializeField] float _Yattackmove1 = 5;
     [SerializeField] float _attackinterval = 1f;
+    [SerializeField] float limitSpeed1Y;
+    [SerializeField] float limitSpeed2Y;
+    [SerializeField] float limitSpeed1X;
+    [SerializeField] float limitSpeed2X;
+    int a = 1;
 
     [SerializeField] int _attackcount=0;
 
@@ -107,22 +111,10 @@ public class P_Contorol : MonoBehaviour
 
             //ÉxÉNÉgÉã
             Vector2 _attackMovePos = _mousPos - _pPos;
+            Vector2 aaa = _attackMovePos.normalized;
 
-            //îÚÇŒÇ∑
-            if (_attackcount == 0)
-            {
-                if (rb.velocity.magnitude < 10)
-                {
-                    rb.AddForce(_attackMovePos * _attackmove1, ForceMode2D.Impulse);
-                    _attackcount++;
-                }
-            }
-            else if(_attackcount>0)
-            {
-                rb.AddForce(_attackMovePos * _attackmove2, ForceMode2D.Impulse);
-            }
 
-            //çUåÇéûÇÃå¸Ç´
+           //çUåÇéûÇÃå¸Ç´
             float jjj = _mousPos.x - _pPos.x;
             int a = 1;
             if (jjj > 0)
@@ -133,9 +125,66 @@ public class P_Contorol : MonoBehaviour
             {
                 a = -1;
             }
+            transform.localScale = new Vector3(a, this.transform.localScale.y, this.transform.localScale.z);
+
+
+
+
+            //îÚÇŒÇ∑
+            if (_attackcount == 0)
+            { 
+                    rb.AddForce(_attackMovePos* _attackmove1, ForceMode2D.Impulse);
+                    _attackcount++;
+
+                //if(a==1&&rb.velocity.x>limitSpeed1X)
+                //{
+                //    rb.velocity = new Vector2(limitSpeed1X, rb.velocity.y);
+                //}
+                //else if(a == -1 && rb.velocity.x > -limitSpeed1X)
+                //{
+                //    rb.velocity = new Vector2(-limitSpeed1X, rb.velocity.y);
+                //}
+
+
+                if (rb.velocity.y > limitSpeed1Y)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, limitSpeed1Y);
+                }
+            }
+            else if(_attackcount>0)
+            {
+                rb.AddForce(aaa * _attackmove2, ForceMode2D.Impulse);
+
+                
+               if (rb.velocity.x < -limitSpeed2X)
+                {
+                    Debug.Log("LO");
+                    rb.velocity = new Vector2(-limitSpeed2X, rb.velocity.y);
+                }
+                else if (a == 1 && rb.velocity.x > limitSpeed2X)
+                {
+                    Debug.Log("ok");
+                    rb.velocity = new Vector2(limitSpeed2X, rb.velocity.y);
+                }
+
+
+
+
+
+                if (rb.velocity.magnitude > limitSpeed2Y)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, limitSpeed2Y);
+                }
+            }
+
+            
+
+
+
+            
             ppp = false;
             
-            transform.localScale = new Vector3(a, this.transform.localScale.y, this.transform.localScale.z);
+            
         }
     }
 
@@ -207,9 +256,13 @@ public class P_Contorol : MonoBehaviour
     {
         float _h = Input.GetAxisRaw("Horizontal");
 
-        Vector2 velo = new Vector2(_h * _speed, rb.velocity.y);
-        rb.velocity = velo;
 
+
+        if (_h > 0 || _h < 0)
+        {
+            Vector2 velo = new Vector2(_h * _speed, rb.velocity.y);
+            rb.velocity = velo;
+        }
           
         if (_h == 0)
         {
@@ -295,6 +348,7 @@ public class P_Contorol : MonoBehaviour
             anim.SetBool("OnGround", true);
             jumpCount = 0;
             OnGround = true;
+            _attackcount = 0;
         }
 
     }
