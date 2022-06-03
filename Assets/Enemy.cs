@@ -25,8 +25,8 @@ public class Enemy : MonoBehaviour
             Vector3 enemypos = this.transform.position;
             Vector3 playerpos = GameObject.FindGameObjectWithTag("Player").transform.position;
             float dis = Vector3.Distance(enemypos, playerpos);
-          //  enemypos.y = Vector2.zero.y;
-            //playerpos.y = Vector2.zero.y;
+            enemypos.y = Vector2.zero.y;
+            playerpos.y = Vector2.zero.y;
             if (dis < 10)
             {
                 _rb.velocity = (playerpos - enemypos).normalized * _speed;

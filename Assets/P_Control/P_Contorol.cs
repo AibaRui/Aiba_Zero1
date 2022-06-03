@@ -133,7 +133,7 @@ public class P_Contorol : MonoBehaviour
             //”ò‚Î‚·
             if (_attackcount == 0)
             { 
-                    rb.AddForce(_attackMovePos* _attackmove1, ForceMode2D.Impulse);
+                    rb.AddForce(aaa* _attackmove1, ForceMode2D.Impulse);
                     _attackcount++;
 
                 //if(a==1&&rb.velocity.x>limitSpeed1X)
