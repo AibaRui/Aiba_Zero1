@@ -12,40 +12,46 @@ public class Enemy : MonoBehaviour
     private bool isDamage=false;
     private bool isDamage2 = false;
     public Renderer _sp;
+
+    private bool isDeath = false;
+
     void Start()
     {
         _rb = gameObject.GetComponent<Rigidbody2D>();
         _sp = GetComponent<Renderer>();
     }
 
-     void FixedUpdate()
+    void FixedUpdate()
     {
-        if (!isDamage && !isDamage2)
+
+        if (!isDeath)
         {
-            Vector3 enemypos = this.transform.position;
-            Vector3 playerpos = GameObject.FindGameObjectWithTag("Player").transform.position;
-            float dis = Vector3.Distance(enemypos, playerpos);
-            enemypos.y = Vector2.zero.y;
-            playerpos.y = Vector2.zero.y;
-            if (dis < 10)
+            if (!isDamage && !isDamage2)
             {
-                _rb.velocity = (playerpos - enemypos).normalized * _speed;
+                Vector3 enemypos = this.transform.position;
+                Vector3 playerpos = GameObject.FindGameObjectWithTag("Player").transform.position;
+                float dis = Vector3.Distance(enemypos, playerpos);
+                enemypos.y = Vector2.zero.y;
+                playerpos.y = Vector2.zero.y;
+                if (dis < 10)
+                {
+                    _rb.velocity = (playerpos - enemypos).normalized * _speed;
+
+                }
+            }
+            else if (isDamage)
+            {
+                _rb.AddForce(transform.right * _nockback, ForceMode2D.Impulse);
+                // StartCoroutine(OnDamage());
+                isDamage = false;
 
             }
-        }
-        else if (isDamage)
-        {
-            _rb.AddForce(transform.right*_nockback, ForceMode2D.Impulse);
-           // StartCoroutine(OnDamage());
-            isDamage = false;
-
         }
     }
 
 
 
-
-
+   
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag=="P_Attack")
@@ -55,8 +61,9 @@ public class Enemy : MonoBehaviour
             
             isDamage = true;
             isDamage2 = true;
-
-        Destroy(this.gameObject,1.0f);
+            isDeath = true;
+            gameObject.layer = LayerMask.NameToLayer("DownEnemy");
+        //Destroy(this.gameObject,1.0f);
         }
 
     }

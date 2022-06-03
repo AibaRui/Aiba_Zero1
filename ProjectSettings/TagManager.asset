@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - P_Attack
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - DownEnemy
+  - Player
   - 
   - 
   - 

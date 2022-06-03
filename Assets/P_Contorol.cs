@@ -28,7 +28,7 @@ public class P_Contorol : MonoBehaviour
     [SerializeField] float _attackinterval = 1f;
     [SerializeField] float limitSpeed1Y;
     [SerializeField] float limitSpeed2Y;
-    [SerializeField] float limitSpeed1X;
+    //[SerializeField] float limitSpeed1X;
     [SerializeField] float limitSpeed2X;
     int a = 1;
 
@@ -40,9 +40,16 @@ public class P_Contorol : MonoBehaviour
     [SerializeField] Animator runEfect = null;
     [SerializeField] Animator attackEffect = null;
 
-   [SerializeField] float time = 0.2f;
-  float m_timer;
 
+
+    private bool _hitenemy=false;
+    private bool _timecount;
+
+
+
+   [SerializeField] float time = 0f;
+  float m_timer;
+    
 
 
 
@@ -80,8 +87,8 @@ public class P_Contorol : MonoBehaviour
 
 
 
-
-
+        HitEnemy();
+        TimeCount();
 
     }
 
@@ -92,7 +99,38 @@ public class P_Contorol : MonoBehaviour
         AttackMove();
     }
 
-   
+   void HitEnemy()
+    {
+        if(_hitenemy)
+        {
+            _hitenemy = false;
+            Time.timeScale = 0.5f;
+            _timecount = true;
+
+        }else
+        {
+            if(time>2)
+            {
+                _timecount = false;
+                Time.timeScale = 1;
+                time = 0;
+            }
+        }
+
+    }
+
+    void TimeCount()
+    {
+        if (_timecount)
+        {
+            time += Time.deltaTime;
+        }
+    }
+
+
+
+
+
     void JudgeAttack()
     {
         isAttack=false;　　 //Animationイベントで攻撃モーションが終わったら実行
@@ -351,7 +389,22 @@ public class P_Contorol : MonoBehaviour
             _attackcount = 0;
         }
 
+        if(collision.gameObject.tag=="Enemy")
+        {
+            _hitenemy = true;
+
+        }
+
+
+
     }
+
+
+   
+
+
+
+
 
 
 }

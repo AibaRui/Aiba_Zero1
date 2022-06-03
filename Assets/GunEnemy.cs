@@ -16,7 +16,7 @@ public class GunEnemy : MonoBehaviour
     [SerializeField] float _keepdistance=10;
     [SerializeField] float _comedistance=20;
 
-
+    private bool isDeath=false;
 
     void Start()
     {
@@ -26,13 +26,21 @@ public class GunEnemy : MonoBehaviour
 
      void Update()
     {
-        Attack();
+        if(!isDeath)
+        {
+            Attack();
+        }
+        
     }
 
 
     void FixedUpdate()
     {
-        Move();
+        if(!isDeath)
+        {
+            Move();
+        }
+        
     }        
 
 
@@ -89,8 +97,9 @@ public class GunEnemy : MonoBehaviour
 
             //isDamage = true;
             //isDamage2 = true;
-
-            Destroy(this.gameObject, 1.0f);
+            isDeath = true;
+            gameObject.layer = LayerMask.NameToLayer("DownEnemy");
+            //Destroy(this.gameObject, 1.0f);
         }
 
     }
