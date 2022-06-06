@@ -28,7 +28,9 @@ public class P_Contorol : MonoBehaviour
     [SerializeField] float _attackinterval = 1f;
     [SerializeField] float limitSpeed1Y;
     [SerializeField] float limitSpeed2Y;
-    //[SerializeField] float limitSpeed1X;
+    [SerializeField] float limitSpeed3Y;
+
+    [SerializeField] float limitSpeed1X;
     [SerializeField] float limitSpeed2X;
     int a = 1;
 
@@ -174,14 +176,7 @@ public class P_Contorol : MonoBehaviour
                     rb.AddForce(aaa* _attackmove1, ForceMode2D.Impulse);
                     _attackcount++;
 
-                //if(a==1&&rb.velocity.x>limitSpeed1X)
-                //{
-                //    rb.velocity = new Vector2(limitSpeed1X, rb.velocity.y);
-                //}
-                //else if(a == -1 && rb.velocity.x > -limitSpeed1X)
-                //{
-                //    rb.velocity = new Vector2(-limitSpeed1X, rb.velocity.y);
-                //}
+                
 
 
                 if (rb.velocity.y > limitSpeed1Y)
@@ -189,7 +184,26 @@ public class P_Contorol : MonoBehaviour
                     rb.velocity = new Vector2(rb.velocity.x, limitSpeed1Y);
                 }
             }
-            else if(_attackcount>0)
+            else if(_attackcount == 1)
+            {
+                rb.AddForce(aaa * _attackmove1, ForceMode2D.Impulse);
+                _attackcount++;
+                if (rb.velocity.y > limitSpeed2Y)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, limitSpeed2Y);
+                }
+                    if (a == 1 && rb.velocity.x > limitSpeed1X)
+                {
+                    rb.velocity = new Vector2(limitSpeed1X, rb.velocity.y);
+                }
+                else if (a == -1 && rb.velocity.x > -limitSpeed1X)
+                {
+                    rb.velocity = new Vector2(-limitSpeed1X, rb.velocity.y);
+                }
+
+
+            }
+            else if(_attackcount>1)
             {
                 rb.AddForce(aaa * _attackmove2, ForceMode2D.Impulse);
 
@@ -205,14 +219,10 @@ public class P_Contorol : MonoBehaviour
                     rb.velocity = new Vector2(limitSpeed2X, rb.velocity.y);
                 }
 
-
-
-
-
-                if (rb.velocity.magnitude > limitSpeed2Y)
-                {
-                    rb.velocity = new Vector2(rb.velocity.x, limitSpeed2Y);
-                }
+                //if (rb.velocity.magnitude > limitSpeed2Y)
+                //{
+                //    rb.velocity = new Vector2(rb.velocity.x, limitSpeed2Y);
+                //}
             }
 
             
@@ -257,7 +267,7 @@ public class P_Contorol : MonoBehaviour
 
     void JudgeJump()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown("w"))
         {
             
             if(jumpCount<jumpLimit)
@@ -312,9 +322,17 @@ public class P_Contorol : MonoBehaviour
          anim.SetBool("run", true);
          runEfect.SetBool("Run", true);
         }
+
+        //if (Input.GetKeyDown("w"))
+        //{
+        //    Vector2 velo = new Vector2(rb.velocity.x,);
+        //    rb.velocity = velo;
+
+
+        //}
     }
 
-  
+
 
     void JudgeBool()
     {
