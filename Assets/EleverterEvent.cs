@@ -6,7 +6,14 @@ public class EleverterEvent : MonoBehaviour
 {
 
    [SerializeField]  EventsJudge eventsJudge;
+    [SerializeField] PowerEL power;
     private bool _isEleverter=false;
+
+    private bool _OnSquript=true;
+
+
+    [SerializeField] Transform pos;
+
 
     void Start()
     {
@@ -16,31 +23,63 @@ public class EleverterEvent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if(eventsJudge._isEvents)
-
-        {
-            if(_isEleverter)
+        //スクリプトの機能
+        if (_OnSquript)
+        {　　//電源入れたか
+            if (power._power == true)
             {
-                if(Input.GetKeyDown("space"))
-                {
-                    Debug.Log("Eleverter");
+                //イベントに入ったか
+                if (eventsJudge._isEvents)
+
+                {   //場所がエレベーターか
+                    if (_isEleverter)
+                    {
+
+                        Debug.Log("Eleverter");
+
+                        GameObject p = GameObject.FindGameObjectWithTag("Player");
+                        p.transform.position = new Vector2(-10, 18);
+                           
+
+
+                    }
+
+
 
                 }
+            }
+        }
 
+       if (_OnSquript)
+        {
+            if (power._power==false)
+            {
+                if (eventsJudge._isEvents)
+                {
+                    if(_isEleverter)
+                    {
+                        Debug.Log("NOPOWEr");
+
+
+                    }
+
+
+                }
 
 
             }
 
 
-
         }
-
 
 
     }
 
+    void OffSquript()
+    {
+        _OnSquript = false;
 
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

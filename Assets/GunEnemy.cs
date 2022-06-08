@@ -94,7 +94,6 @@ public class GunEnemy : MonoBehaviour
         {
 
             Debug.Log("aa");
-
             //isDamage = true;
             //isDamage2 = true;
             isDeath = true;

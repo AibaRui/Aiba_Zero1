@@ -32,7 +32,7 @@ public class P_Contorol : MonoBehaviour
 
     [SerializeField] float limitSpeed1X;
     [SerializeField] float limitSpeed2X;
-    int a = 1;
+    
 
     [SerializeField] int _attackcount=0;
 
@@ -42,8 +42,6 @@ public class P_Contorol : MonoBehaviour
     [SerializeField] Animator runEfect = null;
     [SerializeField] Animator attackEffect = null;
 
-
-
     private bool _hitenemy=false;
     private bool _timecount;
 
@@ -51,9 +49,21 @@ public class P_Contorol : MonoBehaviour
 
    [SerializeField] float time = 0f;
   float m_timer;
-    
 
 
+    [SerializeField] GameObject mous;
+    [SerializeField] LayerMask _layerGound;
+    [SerializeField] float _timelimitE =3f;
+    public float _timeE=0;
+    bool _secondE=false;
+
+    bool _iscoolTimeE=false;
+    bool _isE=true;
+    float _coolTimeE=0;
+    [SerializeField] float _coolTimeLimitE=5;
+
+
+    bool _isEvasion=false;
 
      Rigidbody2D rb;
     private Animator anim = null;
@@ -72,18 +82,25 @@ public class P_Contorol : MonoBehaviour
         float _h = Input.GetAxisRaw("Horizontal");
 
 
-        
-        Attack();
-        //攻撃時に他の動きができないように
-        if (isAttack == false)
+        //回避準備中は攻撃できない
+        if (_isEvasion == false)
         {
-            JudgeJump();
-            Move();
-            FlipX(_h);
+            Attack();
         }
+            //攻撃時に他の動きができないように
+            if (isAttack == false)
+            {
+                JudgeJump();
+                Move();
+                FlipX(_h);
+            }
 
 
 
+        //回避モーション
+        StartCoroutine(Evasion());
+        CoolTimeE();
+        E();
 
         JudgeBool();
 
@@ -97,10 +114,105 @@ public class P_Contorol : MonoBehaviour
 
     void FixedUpdate()
     {
-        Jump();
-        AttackMove();
+        //回避準備中は攻撃できない
+        if (_isEvasion == false)
+        {  
+            AttackMove();
+        }
+         Jump();
     }
 
+
+
+
+    IEnumerator Evasion()
+    {
+        //回避のクールタイム
+        _timeE += Time.deltaTime;
+
+        if (_isE)
+        {
+            if (_timelimitE < _timeE)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    //回避モーション中のbool
+                    _isEvasion = true;
+
+                    Debug.Log("222");
+                    //回避中の時間
+                    _iscoolTimeE = true;
+
+                    _timeE = 0;
+                    Time.timeScale = 0.5f;
+                    
+                    Debug.Log("ppp");
+                    Vector2 mouspos = GameObject.Find("CrossHair").transform.position;
+                    RaycastHit2D hit2D = Physics2D.Raycast(this.gameObject.transform.position, mouspos, _layerGound);
+                    Debug.DrawLine(this.gameObject.transform.position, mouspos, Color.blue);
+
+                    
+                    if (hit2D.collider)
+                    {
+
+                    }
+                    yield return new WaitForSeconds(0.1f);
+                    _secondE = true;
+                    
+
+                }
+            }
+        }
+    }
+
+    void CoolTimeE()
+    {
+        if(_iscoolTimeE)
+        {
+        _coolTimeE += Time.deltaTime;
+        }
+
+
+        if (_coolTimeE < _coolTimeLimitE)
+        {
+            _isE = true;
+        }
+        else if (_coolTimeE > _coolTimeLimitE)  
+        {
+             _iscoolTimeE = false;
+            _isE = false;
+            _coolTimeE = 0;
+            Time.timeScale = 1f;
+           _secondE = false;
+
+            //回避モーション中のbool
+            _isEvasion = false;
+        }
+    }
+
+   void E()
+    {
+        if (_secondE)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                //マウス座標に移動
+                this.transform.position = mous.transform.position;
+                rb.velocity = Vector2.zero;
+
+                _iscoolTimeE = false;
+                _isE = false;
+                _coolTimeE = 0;
+                Time.timeScale = 1f;
+                _secondE = false;
+
+                //回避モーション中のbool
+                _isEvasion = false;
+            }
+
+        }
+
+    }
    void HitEnemy()
     {
         if(_hitenemy)
@@ -239,10 +351,6 @@ public class P_Contorol : MonoBehaviour
 
     void Attack()
     {
-        
-        
-        
-
         m_timer += Time.deltaTime;
         if (Input.GetButtonDown("Fire1"))
             {
@@ -255,13 +363,8 @@ public class P_Contorol : MonoBehaviour
                 m_timer = 0;
                 attackEffect.SetTrigger("Attack");
                 anim.SetTrigger("Attack 0");
-
-
             }
         }
-        
-
-
     }
 
 
@@ -292,13 +395,6 @@ public class P_Contorol : MonoBehaviour
            
         }
     }
-
-
-
-
-
-
-
     //移動
      void Move()
     {
@@ -331,9 +427,6 @@ public class P_Contorol : MonoBehaviour
 
         //}
     }
-
-
-
     void JudgeBool()
     {
 

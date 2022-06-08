@@ -6,7 +6,7 @@ public class EventZone : MonoBehaviour
 {
     //•\Ž¦‚³‚¹‚½‚¢•¨
     [SerializeField] GameObject _showImage = default;
-    bool _isshowImage = false;
+   // bool _isshowImage = false;
 
 
     void Start()
@@ -31,7 +31,7 @@ public class EventZone : MonoBehaviour
        if( collision.gameObject.tag=="Player")
         {
 
-            _isshowImage = true;
+       //     _isshowImage = true;
             _showImage.SetActive(true);
 
         }
