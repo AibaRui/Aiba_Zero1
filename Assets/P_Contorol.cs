@@ -51,6 +51,8 @@ public class P_Contorol : MonoBehaviour
   float m_timer;
 
 
+
+    //回避
     [SerializeField] GameObject mous;
     [SerializeField] LayerMask _layerGound;
     [SerializeField] float _timelimitE =3f;
@@ -61,9 +63,10 @@ public class P_Contorol : MonoBehaviour
     bool _isE=true;
     float _coolTimeE=0;
     [SerializeField] float _coolTimeLimitE=5;
-
+    [SerializeField] Animator evasionEffect = null;
 
     bool _isEvasion=false;
+    bool _isStop = false;
 
      Rigidbody2D rb;
     private Animator anim = null;
@@ -81,12 +84,13 @@ public class P_Contorol : MonoBehaviour
     {
         float _h = Input.GetAxisRaw("Horizontal");
 
-
-        //回避準備中は攻撃できない
-        if (_isEvasion == false)
+        if (_isStop == false)
         {
-            Attack();
-        }
+            //回避準備中は攻撃できない
+            if (_isEvasion == false)
+            {
+                Attack();
+            }
             //攻撃時に他の動きができないように
             if (isAttack == false)
             {
@@ -96,14 +100,14 @@ public class P_Contorol : MonoBehaviour
             }
 
 
-
+        }
         //回避モーション
         StartCoroutine(Evasion());
         CoolTimeE();
         E();
 
         JudgeBool();
-
+        OnStop();
 
 
         HitEnemy();
@@ -114,12 +118,15 @@ public class P_Contorol : MonoBehaviour
 
     void FixedUpdate()
     {
-        //回避準備中は攻撃できない
-        if (_isEvasion == false)
-        {  
-            AttackMove();
+        if (_isStop==false)
+        {
+            //回避準備中は攻撃できない
+            if (_isEvasion == false)
+            {
+                AttackMove();
+            }
+            Jump();
         }
-         Jump();
     }
 
 
@@ -130,6 +137,7 @@ public class P_Contorol : MonoBehaviour
         //回避のクールタイム
         _timeE += Time.deltaTime;
 
+        //回避のクールタイムが終わったか
         if (_isE)
         {
             if (_timelimitE < _timeE)
@@ -198,22 +206,37 @@ public class P_Contorol : MonoBehaviour
             {
                 //マウス座標に移動
                 this.transform.position = mous.transform.position;
-                rb.velocity = Vector2.zero;
+                _isStop = true;
 
+                //エフェクト
+                evasionEffect.SetTrigger("Evasion");
+                anim.SetTrigger("Evasion");
+                //回避モーション中のbool
+
+                _isEvasion = false;
                 _iscoolTimeE = false;
                 _isE = false;
                 _coolTimeE = 0;
                 Time.timeScale = 1f;
                 _secondE = false;
-
-                //回避モーション中のbool
-                _isEvasion = false;
             }
-
         }
-
     }
-   void HitEnemy()
+
+    void OnStop() //アニメーションで使用
+    {
+        if (_isStop)
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+    void OffStop()  //アニメーションで使用
+    {
+        _isStop = false;
+    }
+
+
+    void HitEnemy()
     {
         if(_hitenemy)
         {
